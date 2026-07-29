@@ -78,11 +78,7 @@
  }
   
  .input:focus {
-  outline-color: #e8e8e8;
-  background: #e8e8e8;
-  box-shadow: inset 20px 20px 60px #e8e8e8,
-     inset -20px -20px 60px #ffffff;
-  transition: 0.3s;
+  outline: none;
  }
  
  /* button */
@@ -97,6 +93,7 @@
     cursor: pointer;
     border: 1px solid #e8e8e8;
     transition: all 0.3s;
+    margin-top: -1px;
 }
  
 button:active {
@@ -106,5 +103,5 @@ button:active {
  
 .form
 {
-  margin-top: 3rem;
+  margin-top: 7rem;
 }

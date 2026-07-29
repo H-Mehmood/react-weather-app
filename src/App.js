@@ -6,18 +6,35 @@ import { useEffect, useState } from "react";
 function App() {
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState("");
-  const apiKey = '7b7d4894c8868f1898bed5bcf275cda8';
+  const [errorMessage, setErrorMessage] = useState("");
+  const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
 
   const fetchWeatherData = async () => {
+    if (!apiKey) {
+      setWeatherData("");
+      setErrorMessage("Please configure REACT_APP_WEATHER_API_KEY in your environment.");
+      return;
+    }
+
+    setErrorMessage("");
+
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
       );
       const data = await response.json();
-      console.log(data);
+
+      if (!response.ok || data.cod !== 200) {
+        setWeatherData("");
+        setErrorMessage(data.message || "Unable to fetch weather data. Please try again.");
+        return;
+      }
+
       setWeatherData(data);
     } catch (error) {
       console.error(error);
+      setWeatherData("");
+      setErrorMessage("Something went wrong while fetching weather data.");
     }
   };
 
@@ -86,6 +103,7 @@ function App() {
               <h2 className="country_per">{weatherData.weather[0].description}</h2>
             </>
           ) : null}
+          {errorMessage ? <p className="error_message">{errorMessage}</p> : null}
           <form className='form' onSubmit={(e) => { e.preventDefault(); fetchWeatherData(); }}>
             <input type='text' className='input' placeholder="Enter city name..." onChange={(e) => setCity(e.target.value)} />
             <button type='submit' className='btn'>Search</button>
